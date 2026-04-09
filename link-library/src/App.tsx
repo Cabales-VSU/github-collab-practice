@@ -8,6 +8,7 @@ interface Link {
   id: number;
   title: string;
   url: string;
+  isPinned: boolean;
   category: 'Documentation' | 'Tools' | 'Tutorials';
 }
 
@@ -27,15 +28,24 @@ const App: React.FC = () => {
     localStorage.setItem('link-library-data', JSON.stringify(links));
   }, [links]);
 
-  const addLink = (title: string, url: string, category: Link['category']) => {
-    const newLink: Link = {
-      id: Date.now(), // Unique ID based on time
-      title,
-      url,
-      category
-    };
-    setLinks([newLink, ...links]);
+  // Update your addLink function
+const addLink = (title: string, url: string, category: Link['category']) => {
+  const newLink: Link = {
+    id: Date.now(),
+    title,
+    url,
+    category,
+    isPinned: false // Initialize as false
   };
+  setLinks([newLink, ...links]);
+};
+
+// New Function: Toggle Pin
+const togglePin = (id: number) => {
+  setLinks(prev => prev.map(link => 
+    link.id === id ? { ...link, isPinned: !link.isPinned } : link
+  ));
+};
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
 
@@ -49,6 +59,10 @@ const App: React.FC = () => {
       categoryFilter === 'All' || link.category === categoryFilter;
 
     return matchesSearch && matchesCategory;
+  })
+    .sort((a, b) => {
+    if (a.isPinned === b.isPinned) return 0; // Keep existing order if both are same
+    return a.isPinned ? -1 : 1; // Pinned items (-1) move to the top
   });
 
   return (
@@ -80,7 +94,18 @@ const App: React.FC = () => {
         <section className="link-grid">
           {filteredLinks.length > 0 ? (
             filteredLinks.map((link) => (
-              <div key={link.id} className="link-card">
+              <div key={link.id} className={`link-card ${link.isPinned ? 'pinned' : ''}`}>
+                {/* Add the Action Buttons */}
+                <div className="card-actions">
+                  <button 
+                    className={`pin-btn ${link.isPinned ? 'active' : ''}`} 
+                    onClick={() => togglePin(link.id)}
+                    title={link.isPinned ? "Unpin" : "Pin to top"}
+                  >
+                    📌
+                  </button>
+                </div>
+
                 <div className="card-header">
                   <span className={`badge ${link.category.toLowerCase()}`}>{link.category}</span>
                 </div>
