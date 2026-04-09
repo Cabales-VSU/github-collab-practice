@@ -17,10 +17,3 @@ Track our progress here. Use the checkboxes to see what's done!
 - [ ] **Data Persistence** - Using `localStorage` so data survives a page refresh.
 
 ---
-
-## 🤝 How to Collaborate
-
-1. **Clone the repo:** `git clone [repository-url]`
-2. **Create a branch:** `git checkout -b feature/your-feature-name`
-3. **Commit changes:** `git commit -m "feat: add some cool logic"`
-4. **Push & PR:** Push your branch and open a Pull Request for the team to review!
