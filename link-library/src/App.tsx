@@ -3,6 +3,7 @@ import AddLinkForm from './components/AddLinkForm';
 import SearchBar from './components/SearchBar';
 import PinButton from './components/PinButton';
 import type { LinkCategory } from './components/SearchBar';
+import RemoveButton from './components/RemoveButton';
 import './App.css';
 
 interface Link {
@@ -39,6 +40,10 @@ const addLink = (title: string, url: string, category: Link['category']) => {
     isPinned: false // Initialize as false
   };
   setLinks([newLink, ...links]);
+};
+
+const removeLink = (id: number) => {
+  setLinks(prev => prev.filter(link => link.id !== id));
 };
 
 // New Function: Toggle Pin
@@ -104,6 +109,7 @@ const togglePin = (id: number) => {
                     isPinned={link.isPinned} 
                     onToggle={() => togglePin(link.id)} 
                   />
+                  <RemoveButton onRemove={() => removeLink(link.id)} />
                 </div>
 
                 <div className="card-header">
