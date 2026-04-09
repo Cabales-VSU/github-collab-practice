@@ -90,7 +90,7 @@ const App: React.FC = () => {
       </main>
 
       <footer className="footer">
-        <p>Collaboration Project</p>
+        <p>Collaboration Project asdasdS</p>
       </footer>
     </div>
   );
