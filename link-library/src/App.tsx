@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AddLinkForm from './components/AddLinkForm';
+import SearchBar from './components/SearchBar';
+import type { LinkCategory } from './components/SearchBar';
 import './App.css';
 
 interface Link {
@@ -17,6 +19,7 @@ const App: React.FC = () => {
   });
   
   const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<LinkCategory>('All');
   const [darkMode, setDarkMode] = useState(false);
 
   // Automatically save to localStorage whenever the 'links' state changes
@@ -24,7 +27,7 @@ const App: React.FC = () => {
     localStorage.setItem('link-library-data', JSON.stringify(links));
   }, [links]);
 
-  const addLink = (title: string, url: string, category: any) => {
+  const addLink = (title: string, url: string, category: Link['category']) => {
     const newLink: Link = {
       id: Date.now(), // Unique ID based on time
       title,
@@ -34,10 +37,19 @@ const App: React.FC = () => {
     setLinks([newLink, ...links]);
   };
 
-  const filteredLinks = links.filter(link =>
-    link.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    link.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const filteredLinks = links.filter((link) => {
+    const matchesSearch =
+      link.title.toLowerCase().includes(normalizedSearch) ||
+      link.url.toLowerCase().includes(normalizedSearch) ||
+      link.category.toLowerCase().includes(normalizedSearch);
+
+    const matchesCategory =
+      categoryFilter === 'All' || link.category === categoryFilter;
+
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className={`app-container ${darkMode ? 'dark' : 'light'}`}>
@@ -47,15 +59,12 @@ const App: React.FC = () => {
           <h1>Link<span>Library</span></h1>
         </div>
         <div className="controls">
-          <div className="search-wrapper">
-            <span className="search-icon">🔍</span>
-            <input 
-              type="text" 
-              placeholder="Search shared resources..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchTermChange={setSearchTerm}
+            categoryFilter={categoryFilter}
+            onCategoryFilterChange={setCategoryFilter}
+          />
           <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? '☀️ Light' : '🌙 Dark'}
           </button>
