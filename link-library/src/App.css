@@ -286,10 +286,10 @@ body {
   border-top: 1px solid var(--border-color);
 }
 
-.pin-button {
+..pin-button {
   position: absolute;
   top: 1rem;
-  right: 1rem;
+  right: 4.5rem;
   background: var(--container-bg);
   border: 1px solid var(--border-color);
   border-radius: 50%;
@@ -310,6 +310,34 @@ body {
 /* Show the pin button when hovering over the card */
 .link-card:hover .pin-button {
   opacity: 1;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 6;
+  opacity: 0;
+}
+
+.link-card:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  color: #ef4444;
+  transform: scale(1.05);
 }
 
 /* If the card is already pinned, keep the button visible and highlight it */
