@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AddLinkForm from './components/AddLinkForm';
 import SearchBar from './components/SearchBar';
+import PinButton from './components/PinButton';
 import type { LinkCategory } from './components/SearchBar';
 import RemoveButton from './components/RemoveButton';
 import './App.css';
@@ -66,9 +67,11 @@ const togglePin = (id: number) => {
     return matchesSearch && matchesCategory;
   })
     .sort((a, b) => {
-    if (a.isPinned === b.isPinned) return 0; // Keep existing order if both are same
-    return a.isPinned ? -1 : 1; // Pinned items (-1) move to the top
-  });
+  if (a.isPinned !== b.isPinned) {
+    return a.isPinned ? -1 : 1;
+  }
+  return b.id - a.id; // Newest links appear first if pinned status is equal
+});
 
   return (
     <div className={`app-container ${darkMode ? 'dark' : 'light'}`}>
@@ -102,13 +105,10 @@ const togglePin = (id: number) => {
               <div key={link.id} className={`link-card ${link.isPinned ? 'pinned' : ''}`}>
                 {/* Add the Action Buttons */}
                 <div className="card-actions">
-                  <button 
-                    className={`pin-btn ${link.isPinned ? 'active' : ''}`} 
-                    onClick={() => togglePin(link.id)}
-                    title={link.isPinned ? "Unpin" : "Pin to top"}
-                  >
-                    📌
-                  </button>
+                 <PinButton 
+                    isPinned={link.isPinned} 
+                    onToggle={() => togglePin(link.id)} 
+                  />
                   <RemoveButton onRemove={() => removeLink(link.id)} />
                 </div>
 
